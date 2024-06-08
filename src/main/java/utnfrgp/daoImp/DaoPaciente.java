@@ -1,9 +1,7 @@
 package utnfrgp.daoImp;
 
 import java.util.List;
-
 import org.hibernate.Session;
-
 import utnfrgp.dao.IDaoPaciente;
 import utnfrgp.entidad.Paciente;
 
