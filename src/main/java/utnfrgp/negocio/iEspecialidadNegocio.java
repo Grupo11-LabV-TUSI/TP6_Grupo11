@@ -1,0 +1,14 @@
+package utnfrgp.negocio;
+
+import java.util.List;
+
+import utnfrgp.entidad.Especialidad;
+
+public interface iEspecialidadNegocio {
+	public boolean add(Especialidad especialidad);
+	public Especialidad readOne(int idEspecialidad);
+	public boolean exist(int idEspecialidad);
+	public boolean update(Especialidad especialidad);
+	public boolean delete(Especialidad especialidad);
+	public List<Especialidad> readAll();
+}
