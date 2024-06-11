@@ -16,7 +16,7 @@ import javax.persistence.Table;
 /* Querys definidas por notacion */
 @NamedQueries({
 	@NamedQuery(
-		name = "findAllPacientes",
+		name = "findAllUsuarios",
 		query = "SELECT p FROM Usuario p"
 		)
 })
