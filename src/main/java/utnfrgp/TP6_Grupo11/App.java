@@ -1,13 +1,20 @@
 package utnfrgp.TP6_Grupo11;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import utnfrgp.entidad.Especialidad;
+import utnfrgp.entidad.Horario;
+import utnfrgp.entidad.Medico;
 import utnfrgp.entidad.Paciente;
+import utnfrgp.entidad.Usuario;
 import utnfrgp.negocioImpl.EspecialidadNegocio;
+import utnfrgp.negocioImpl.MedicoNegocio;
 import utnfrgp.negocioImpl.PacienteNegocio;
 import utnfrgp.resources.Config;
 
@@ -23,46 +30,49 @@ public class App {
 
 		ApplicationContext appContext = new AnnotationConfigApplicationContext(Config.class);
 
-		PacienteNegocio pacienteNegocio = (PacienteNegocio) appContext.getBean("PacienteNegocioBean");
-		EspecialidadNegocio especialidadNegocio = (EspecialidadNegocio) appContext.getBean("EspecialidadNegocioBean");
+        // Obtener el bean MedicoNegocio
+        MedicoNegocio medicoNegocio = (MedicoNegocio) appContext.getBean("MedicoNegocioBean");
 
-		Paciente paciente;
-		Especialidad especialidad;
+        // Crear horarios para el primer médico
+        Horario horario1Medico1 = new Horario("Lunes", LocalTime.of(8, 0), LocalTime.of(12, 0), null);
+        Horario horario2Medico1 = new Horario("Martes", LocalTime.of(14, 0), LocalTime.of(18, 0), null);
 
-//		for (int i = 0; i < 2; i++) {
-//			paciente = (Paciente) appContext.getBean("PacienteBean");
-//			paciente.setDni(1 + i);
-//			paciente.setNombre("nombre" + (1 + i));
-//			paciente.setApellido("apellido" + (1 + i));
-//			paciente.setEmail("email" + (1 + i));
-//			paciente.setTelefono("telefono" + (1 + i));
-//			paciente.setFecha_nacimiento(LocalDate.of(1900 + (1 + i), 1, 1));
-//			paciente.setDireccion("direccion" + (1 + i));
-//			paciente.setLocalidad("localidad" + (1 + i));
-//			paciente.setProvincia("provincia" + (1 + i));
-//			paciente.setEstado(true);
-//
-//			// VERIFICAR QUE NO EXISTE EL USUARIO PARA AGREGARLO
-//			estado = pacienteNegocio.exist(paciente.getDni());
-//			if (estado == false) {
-//				pacienteNegocio.add(paciente);
-//				System.out.println(MENSAJE_AGREGADO);
-//			} else {
-//				System.out.println(MENSAJE_YA_EXISTE);
-//			}
-//			System.out.println(pacienteNegocio.readOne(paciente.getDni()));
-//		}
-		
-		for(int j=0; j<2; j++ ) {
-			especialidad = (Especialidad) appContext.getBean("EspecialidadBean");
-			especialidad.setNombre("Espcialidad" + j);
-			estadoEsp = especialidadNegocio.exist(especialidad.getId());
-			if(estadoEsp == false) {
-				especialidadNegocio.add(especialidad);
-				System.out.println(MENSAJE_AGREGADO);
-			}else {
-				System.out.println(MENSAJE_YA_EXISTE);
-			}
-		}
+        // Crear horarios para el segundo médico
+        Horario horario1Medico2 = new Horario("Lunes", LocalTime.of(10, 0), LocalTime.of(14, 0), null);
+        Horario horario2Medico2 = new Horario("Martes", LocalTime.of(16, 0), LocalTime.of(20, 0), null);
+
+        // Crear listas de horarios
+        Set<Horario> horariosMedico1 = new HashSet<Horario>();
+        horariosMedico1.add(horario1Medico1);
+        horariosMedico1.add(horario2Medico1);
+
+        Set<Horario> horariosMedico2 = new HashSet<Horario>();
+        horariosMedico2.add(horario1Medico2);
+        horariosMedico2.add(horario2Medico2);
+
+        // Crear médicos
+        Medico medico1 = new Medico(123, "Juan", "Perez", "juan.perez@example.com", "123456789",
+                LocalDate.of(1980, 1, 1), null, null, true);
+        Medico medico2 = new Medico(124, "Ana", "Gomez", "ana.gomez@example.com", "987654321",
+                LocalDate.of(1985, 5, 15), null, null, true);
+
+        // Asignar horarios a los médicos
+        medico1.setHorarios(horariosMedico1);
+        medico2.setHorarios(horariosMedico2);
+
+        // Asignar médicos a los horarios
+        for (Horario h : horariosMedico1) {
+            h.setMedico(medico1);
+        }
+        for (Horario h : horariosMedico2) {
+            h.setMedico(medico2);
+        }
+
+        // Guardar los médicos en la base de datos
+        medicoNegocio.add(medico1);
+        medicoNegocio.add(medico2);
+
+        
+        
 	}
 }

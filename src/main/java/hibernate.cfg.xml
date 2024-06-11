@@ -14,5 +14,7 @@
         <mapping class="utnfrgp.entidad.Especialidad"/>
         <mapping class="utnfrgp.entidad.Usuario"/>
         <mapping class="utnfrgp.entidad.Paciente"/>
+        <mapping class="utnfrgp.entidad.Horario"/>
+        <mapping class="utnfrgp.entidad.Medico"/>
     </session-factory>
 </hibernate-configuration>
