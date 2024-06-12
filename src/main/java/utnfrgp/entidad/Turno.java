@@ -51,7 +51,8 @@ public class Turno  implements Serializable{
 	@JoinColumn(name="paciente_id")
 	private Paciente paciente;
 	
-	
+	@Column(name = "Estado")
+	private boolean estado;
 	
 	@Column(name="fecha")
 	private LocalDate fecha;
@@ -65,31 +66,31 @@ public class Turno  implements Serializable{
 	@Column(name="observacion")
 	private String observacion;
 	
-	@Column(name="estado")
-	private EstadoTurno estado;
+	@Column(name="estadoTurno")
+	private EstadoTurno estadoTurno;
 	
 	// constructor vacio para hibernate
 	public Turno() {}
 
 	public Turno(Medico medico, Paciente paciente, LocalDate fecha, LocalTime hora, String observacion,
-			EstadoTurno estado) {
+			EstadoTurno estadoTurno) {
 		this.medico = medico;
 		this.paciente = paciente;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.observacion = observacion;
-		this.estado = estado;
+		this.estadoTurno = estadoTurno;
 	}
 
 	public Turno(Long id, Medico medico, Paciente paciente, LocalDate fecha, LocalTime hora, String observacion,
-			EstadoTurno estado) {
+			EstadoTurno estadoTurno) {
 		this.id = id;
 		this.medico = medico;
 		this.paciente = paciente;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.observacion = observacion;
-		this.estado = estado;
+		this.estadoTurno = estadoTurno;
 	}
 	// Getters y Setters
 	public Long getId() {
@@ -139,19 +140,30 @@ public class Turno  implements Serializable{
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
 	}
-
-	public EstadoTurno getEstado() {
+	
+	
+	
+	public boolean isEstado() {
 		return estado;
 	}
 
-	public void setEstado(EstadoTurno estado) {
+	public void setEstado(boolean estado) {
 		this.estado = estado;
 	}
+
+	public EstadoTurno getEstadoTurno() {
+		return estadoTurno;
+	}
+
+	public void setEstadoTurno(EstadoTurno estadoTurno) {
+		this.estadoTurno = estadoTurno;
+	}
+
 	// toString
 	@Override
 	public String toString() {
 		return "Turno [id=" + id + ", medico=" + medico + ", paciente=" + paciente + ", fecha=" + fecha + ", hora="
-				+ hora + ", observacion=" + observacion + ", estado=" + estado + "]";
+				+ hora + ", observacion=" + observacion + ", estado del Turno=" + estadoTurno + ", estado " + estado +"]";
 	}
 
 }

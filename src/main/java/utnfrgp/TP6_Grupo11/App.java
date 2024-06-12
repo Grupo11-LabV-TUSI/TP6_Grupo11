@@ -41,7 +41,7 @@ public class App {
 		
 		System.out.println(turno.toString());
 		
-		/*
+		/*	
         // Obtener el bean MedicoNegocio
         MedicoNegocio medicoNegocio = (MedicoNegocio) appContext.getBean("MedicoNegocioBean");
 
