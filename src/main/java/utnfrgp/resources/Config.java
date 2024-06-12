@@ -12,6 +12,7 @@ import utnfrgp.daoImp.DaoEspecialidad;
 import utnfrgp.daoImp.DaoHorario;
 import utnfrgp.daoImp.DaoMedico;
 import utnfrgp.daoImp.DaoPaciente;
+import utnfrgp.daoImp.DaoTurno;
 import utnfrgp.entidad.Especialidad;
 import utnfrgp.entidad.Horario;
 import utnfrgp.entidad.Medico;
@@ -21,6 +22,8 @@ import utnfrgp.negocioImpl.EspecialidadNegocio;
 import utnfrgp.negocioImpl.HorarioNegocio;
 import utnfrgp.negocioImpl.MedicoNegocio;
 import utnfrgp.negocioImpl.PacienteNegocio;
+import utnfrgp.negocioImpl.TurnoNegocio;
+
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -69,6 +72,18 @@ public class Config {
 		daoHorario.setConexion(ConexionBean());
         return daoHorario;
     }
+	
+	/* Bean Turno */
+	@Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public DaoTurno DaoTurnoBean() {
+		
+		DaoTurno daoTurnoBean = new DaoTurno();
+		
+		daoTurnoBean.setConexion(ConexionBean());
+        return daoTurnoBean;
+    }
+
 
 	/** BEANS NEGOCIO */
 	/* Bean PacienteNegocio */
@@ -105,6 +120,16 @@ public class Config {
     	HorarioNegocio horarioNegocio = new HorarioNegocio();
     	horarioNegocio.setDaoHorario(DaoHorarioBean());
         return horarioNegocio;
+    }
+    
+    
+    /* Bean TurnoNegocio */
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public TurnoNegocio TurnoNegocioBean() {
+    	TurnoNegocio  turnoNegocio = new TurnoNegocio();
+    	turnoNegocio.setDaoTurno(DaoTurnoBean());
+        return turnoNegocio;
     }
 
 	/** BEANS ENTIDADES */

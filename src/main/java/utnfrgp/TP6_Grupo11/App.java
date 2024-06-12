@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import utnfrgp.daoImp.DaoTurno;
 import utnfrgp.entidad.Especialidad;
 import utnfrgp.entidad.Horario;
 import utnfrgp.entidad.Medico;
@@ -17,6 +18,7 @@ import utnfrgp.entidad.Usuario;
 import utnfrgp.negocioImpl.EspecialidadNegocio;
 import utnfrgp.negocioImpl.MedicoNegocio;
 import utnfrgp.negocioImpl.PacienteNegocio;
+import utnfrgp.negocioImpl.TurnoNegocio;
 import utnfrgp.resources.Config;
 
 public class App {
@@ -30,8 +32,12 @@ public class App {
 		boolean estadoEsp = false;
 
 		ApplicationContext appContext = new AnnotationConfigApplicationContext(Config.class);
-
+		TurnoNegocio turnoNegocio = (TurnoNegocio)appContext.getBean("TurnoNegocioBean");
 		Turno turno = (Turno)appContext.getBean("turnoNuevo");
+		
+		turnoNegocio.add(turno);
+		
+		
 		
 		System.out.println(turno.toString());
 		
