@@ -12,6 +12,7 @@ import utnfrgp.entidad.Especialidad;
 import utnfrgp.entidad.Horario;
 import utnfrgp.entidad.Medico;
 import utnfrgp.entidad.Paciente;
+import utnfrgp.entidad.Turno;
 import utnfrgp.entidad.Usuario;
 import utnfrgp.negocioImpl.EspecialidadNegocio;
 import utnfrgp.negocioImpl.MedicoNegocio;
@@ -30,6 +31,11 @@ public class App {
 
 		ApplicationContext appContext = new AnnotationConfigApplicationContext(Config.class);
 
+		Turno turno = (Turno)appContext.getBean("turnoNuevo");
+		
+		System.out.println(turno.toString());
+		
+		/*
         // Obtener el bean MedicoNegocio
         MedicoNegocio medicoNegocio = (MedicoNegocio) appContext.getBean("MedicoNegocioBean");
 
@@ -72,7 +78,7 @@ public class App {
         medicoNegocio.add(medico1);
         medicoNegocio.add(medico2);
 
-        
+  */      
         
 	}
 }

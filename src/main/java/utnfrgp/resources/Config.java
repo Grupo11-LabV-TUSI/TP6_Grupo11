@@ -1,6 +1,7 @@
 package utnfrgp.resources;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -15,11 +16,14 @@ import utnfrgp.entidad.Especialidad;
 import utnfrgp.entidad.Horario;
 import utnfrgp.entidad.Medico;
 import utnfrgp.entidad.Paciente;
+import utnfrgp.entidad.Turno;
 import utnfrgp.negocioImpl.EspecialidadNegocio;
 import utnfrgp.negocioImpl.HorarioNegocio;
 import utnfrgp.negocioImpl.MedicoNegocio;
 import utnfrgp.negocioImpl.PacienteNegocio;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class Config {
 	/** BEANS CAPAS */
 	/* Bean Conexion */
@@ -132,4 +136,18 @@ public class Config {
     public Horario HorarioBean() {
         return new Horario();
     }
+    
+    //Bean Turno
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public Turno turnoNuevo() {
+    	
+    	Turno nuevoTurno = new Turno();
+    	nuevoTurno.setMedico(MedicoBean());
+    	nuevoTurno.setFecha(LocalDate.now());
+    	nuevoTurno.setHora(LocalTime.now());
+    	nuevoTurno.setPaciente(PacienteBean());
+    	return nuevoTurno;
+    }
+    
 }
