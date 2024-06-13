@@ -30,6 +30,7 @@ public class Medico implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="matricula")
     private int matricula;
 
@@ -65,7 +66,7 @@ public class Medico implements Serializable {
     // Constructor vacío para Hibernate
     public Medico() {}
 
-    public Medico(int matricula, String nombre, String apellido, String email, String telefono,
+    public Medico(int matricula , String nombre, String apellido, String email, String telefono,
                   LocalDate fechaNacimiento, Usuario usuario, Especialidad especialidad, boolean estado) {
         this.matricula = matricula;
         this.nombre = nombre;
