@@ -31,7 +31,7 @@ public class App {
 		boolean estado = false;
 		boolean estadoEsp = false;
 
-	
+		ApplicationContext appContext = new AnnotationConfigApplicationContext(Config.class);
 	
 		
 		//Especialidad
