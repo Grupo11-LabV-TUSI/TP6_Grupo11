@@ -2,61 +2,78 @@ package utnfrgp.entidad;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /* Querys definidas por notacion */
-@NamedQueries({
-	@NamedQuery(
-		name = "findAllPacientes",
-		query = "SELECT p FROM Paciente p"
-		)
-})
+@NamedQueries({ @NamedQuery(name = "findAllPacientes", query = "SELECT p FROM Paciente p") })
 
 @Entity
-@Table(name="Paciente")
+@Table(name = "Paciente")
 public class Paciente implements Serializable {
 	// Implementar serializable
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="dni")
+	@Column(name = "dni")
 	private int dni;
-	
-	@Column(name="nombre")
+
+	@Column(name = "nombre")
 	private String nombre;
-	
-	@Column(name="apellido")
+
+	@Column(name = "apellido")
 	private String apellido;
-	
-	@Column(name="email")
+
+	@Column(name = "email")
 	private String email;
-	
-	@Column(name="telefono")
+
+	@Column(name = "telefono")
 	private String telefono;
-	
-	@Column(name="fecha_nacimiento")
+
+	@Column(name = "fecha_nacimiento")
 	private LocalDate fecha_nacimiento;
-	
-	@Column(name="direccion")
+
+	@Column(name = "direccion")
 	private String direccion;
-	
-	@Column(name="localidad")
+
+	@Column(name = "localidad")
 	private String localidad;
-	
-	@Column(name="provincia")
+
+	@Column(name = "provincia")
 	private String provincia;
-	
-	@Column(name="estado")
+
+	@Column(name = "estado")
 	private boolean estado;
-	
+
+	// Bidireccion
+	@OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY)
+	private List<Turno> turnos;
+
 	// Constructor vacio requerido por Hibernate
-	public Paciente() {}
+	public Paciente() {
+	}
+
+	public Paciente(String nombre, String apellido, String email, String telefono, LocalDate fecha_nacimiento,
+			String direccion, String localidad, String provincia, boolean estado, List<Turno> turnos) {
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.email = email;
+		this.telefono = telefono;
+		this.fecha_nacimiento = fecha_nacimiento;
+		this.direccion = direccion;
+		this.localidad = localidad;
+		this.provincia = provincia;
+		this.estado = estado;
+		this.turnos = turnos;
+	}
 
 	public Paciente(int dni, String nombre, String apellido, String email, String telefono, LocalDate fecha_nacimiento,
 			String direccion, String localidad, String provincia, boolean estado) {
@@ -153,103 +170,121 @@ public class Paciente implements Serializable {
 		this.estado = estado;
 	}
 
+	// Bidireccion
+	public List<Turno> getTurnos() {
+		return turnos;
+	}
+
+	public void setTurnos(List<Turno> turnos) {
+		this.turnos = turnos;
+	}
+
 	@Override
 	public String toString() {
-		return "Paciente [dni=" + dni + ", nombre=" + nombre + ", apellido=" + apellido + ", email=" + email
+		String mensaje = "Paciente [dni=" + dni + ", nombre=" + nombre + ", apellido=" + apellido + ", email=" + email
 				+ ", telefono=" + telefono + ", fecha_nacimiento=" + fecha_nacimiento + ", direccion=" + direccion
-				+ ", localidad=" + localidad + ", provincia=" + provincia + ", estado=" + estado + "]";
+				+ ", localidad=" + localidad + ", provincia=" + provincia + ", estado=" + estado + ", turnos=";
+		String auxMensaje = "{";
+		if (turnos != null) {
+			for (Turno turno : turnos) {
+				auxMensaje += turno.getId() + " " + turno.getMedico() + " " + turno.getFecha() + " " + turno.getHora()
+						+ " " + turno.getObservacion() + " " + turno.getEstadoTurno() + " " + turno.getEstado() + " - ";
+			}
+		}
+		auxMensaje += "}";
+		return mensaje + auxMensaje + "]";
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if(this == obj) {
+		if (this == obj) {
 			return true;
 		}
-		if(obj == null) {
+		if (obj == null) {
 			return false;
 		}
-		if(getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		Paciente other = (Paciente) obj;
-		if(dni == 0) {
-			if(other.dni != 0) {
+		if (dni == 0) {
+			if (other.dni != 0) {
 				return false;
-			} else if(!(dni == other.dni)) {
-				return false;
-			}
-		}
-		if(nombre == null) {
-			if(other.nombre != null) {
-				return false;
-			} else if(!nombre.equals(other.nombre)) {
+			} else if (!(dni == other.dni)) {
 				return false;
 			}
 		}
-		if(apellido == null) {
-			if(other.apellido != null) {
+		if (nombre == null) {
+			if (other.nombre != null) {
 				return false;
-			} else if(!apellido.equals(other.apellido)) {
-				return false;
-			}
-		}
-		if(email == null) {
-			if(other.email != null) {
-				return false;
-			} else if(!email.equals(other.email)) {
+			} else if (!nombre.equals(other.nombre)) {
 				return false;
 			}
 		}
-		if(telefono == null) {
-			if(other.telefono != null) {
+		if (apellido == null) {
+			if (other.apellido != null) {
 				return false;
-			} else if(!telefono.equals(other.telefono)) {
-				return false;
-			}
-		}
-		if(fecha_nacimiento == null) {
-			if(other.fecha_nacimiento != null) {
-				return false;
-			} else if(!fecha_nacimiento.equals(other.fecha_nacimiento)) {
+			} else if (!apellido.equals(other.apellido)) {
 				return false;
 			}
 		}
-		if(direccion == null) {
-			if(other.direccion != null) {
+		if (email == null) {
+			if (other.email != null) {
 				return false;
-			} else if(!direccion.equals(other.direccion)) {
-				return false;
-			}
-		}
-		if(localidad == null) {
-			if(other.localidad != null) {
-				return false;
-			} else if(!localidad.equals(other.localidad)) {
+			} else if (!email.equals(other.email)) {
 				return false;
 			}
 		}
-		if(provincia == null) {
-			if(other.provincia != null) {
+		if (telefono == null) {
+			if (other.telefono != null) {
 				return false;
-			} else if(!provincia.equals(other.provincia)) {
-				return false;
-			}
-		}
-		if(nombre == null) {
-			if(other.nombre != null) {
-				return false;
-			} else if(!nombre.equals(other.nombre)) {
+			} else if (!telefono.equals(other.telefono)) {
 				return false;
 			}
 		}
-		if(estado == false) {
-			if(other.estado != false) {
+		if (fecha_nacimiento == null) {
+			if (other.fecha_nacimiento != null) {
 				return false;
-			} else if(!(estado == other.estado)) {
+			} else if (!fecha_nacimiento.equals(other.fecha_nacimiento)) {
+				return false;
+			}
+		}
+		if (direccion == null) {
+			if (other.direccion != null) {
+				return false;
+			} else if (!direccion.equals(other.direccion)) {
+				return false;
+			}
+		}
+		if (localidad == null) {
+			if (other.localidad != null) {
+				return false;
+			} else if (!localidad.equals(other.localidad)) {
+				return false;
+			}
+		}
+		if (provincia == null) {
+			if (other.provincia != null) {
+				return false;
+			} else if (!provincia.equals(other.provincia)) {
+				return false;
+			}
+		}
+		if (nombre == null) {
+			if (other.nombre != null) {
+				return false;
+			} else if (!nombre.equals(other.nombre)) {
+				return false;
+			}
+		}
+		if (estado == false) {
+			if (other.estado != false) {
+				return false;
+			} else if (!(estado == other.estado)) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 }

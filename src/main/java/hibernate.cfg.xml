@@ -12,5 +12,10 @@
         <property name="hbm2ddl.auto">update</property>
         <property name="show_sql">true</property>
         <mapping class="utnfrgp.entidad.Paciente"/>
+        <mapping class="utnfrgp.entidad.Especialidad"/>
+        <mapping class="utnfrgp.entidad.Usuario"/>
+        <mapping class="utnfrgp.entidad.Horario"/>
+        <mapping class="utnfrgp.entidad.Medico"/>
+        <mapping class="utnfrgp.entidad.Turno"/>
     </session-factory>
 </hibernate-configuration>
