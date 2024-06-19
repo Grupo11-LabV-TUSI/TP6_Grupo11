@@ -188,8 +188,8 @@ public class App {
 		medico = medicoNegocio.readOne(1L);
 		paciente = pacienteNegocio.readOne(1);
 		System.err.println("datos para el turno");
-		//System.out.println(medico);
-		//System.out.println(paciente);
+		System.out.println(medico);
+		System.out.println(paciente);
 		turno.setMedico(medico);
 		turno.setPaciente(paciente);
 
