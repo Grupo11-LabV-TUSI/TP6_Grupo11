@@ -11,63 +11,66 @@ public class DaoMedico implements IDaoMedico {
 	
 	private Conexion conexion;
 
-    private SessionFactory sessionFactory;
-
     public DaoMedico() {
-        sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
-    public boolean add(Medico medico) {
+    public DaoMedico(Conexion conexion) {
+		this.conexion = conexion;
+	}
+
+	public boolean add(Medico medico) {
         boolean estado = true;
-        Session session = sessionFactory.openSession();
+        conexion = new Conexion();
+		Session session = null;
 
         try {
-            session.beginTransaction();
+        	session = conexion.abrirConexion();
+			session.beginTransaction();
             session.save(medico);
+            session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
-            if (session.getTransaction() != null) {
+            if (session != null) {
                 session.getTransaction().rollback();
             }
             e.printStackTrace();
             estado = false;
         } finally {
-            session.close();
         }
 
         return estado;
     }
 
-    public Medico readOne(Long id) {
-        Session session = sessionFactory.openSession();
-        Medico medico = (Medico) session.get(Medico.class, id);
-        session.close();
+    public Medico readOne(Long matriculaMedico) {
+    	Session session = conexion.abrirConexion();
+		session.beginTransaction();
+        Medico medico = (Medico) session.get(Medico.class, matriculaMedico);
         return medico;
     }
 
-    public boolean exist(Long id) {
-        Session session = sessionFactory.openSession();
-        Medico medico = (Medico) session.get(Medico.class, id);
-        session.close();
+    public boolean exist(Long matriculaMedico) {
+    	Session session = conexion.abrirConexion();
+		session.beginTransaction();
+        Medico medico = (Medico) session.get(Medico.class, matriculaMedico);
         return medico != null;
     }
 
     public boolean update(Medico medico) {
         boolean estado = true;
-        Session session = sessionFactory.openSession();
-
+        Session session = null;
         try {
+        	session = conexion.abrirConexion();
             session.beginTransaction();
             session.update(medico);
+            session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
-            if (session.getTransaction() != null) {
+            if (session != null) {
                 session.getTransaction().rollback();
             }
             e.printStackTrace();
             estado = false;
         } finally {
-            session.close();
         }
 
         return estado;
@@ -75,29 +78,32 @@ public class DaoMedico implements IDaoMedico {
 
     public boolean delete(Medico medico) {
         boolean estado = true;
-        Session session = sessionFactory.openSession();
+        conexion = new Conexion();
+		Session session = null;
 
         try {
-            session.beginTransaction();
+        	session = conexion.abrirConexion();
+			session.beginTransaction();
             session.delete(medico);
+            session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
-            if (session.getTransaction() != null) {
+            if (session != null) {
                 session.getTransaction().rollback();
             }
             e.printStackTrace();
             estado = false;
         } finally {
-            session.close();
         }
 
         return estado;
     }
 
     public List<Medico> readAll() {
-        Session session = sessionFactory.openSession();
+    	conexion = new Conexion();
+		Session session = conexion.abrirConexion();
+		session.beginTransaction();
         List<Medico> medicos = session.createQuery("FROM Medico").list();
-        session.close();
         return medicos;
     }
     

@@ -6,25 +6,26 @@ import java.util.List;
 import utnfrgp.entidad.Turno;
 
 public interface IDaoTurno {
+	// crear
+	public boolean add(Turno turno);
 
+	// leer
+	public Turno leer(Long id);
 	
-		// crear
-		public  void add(Turno turno);
+	// existe
+	public boolean existe(Long id);
 
-		// leer
-		public  Turno leer(Long id);
-		// actualizar
-		public  void actualizar(Turno turno);
-		// borrar
-		public  void borrar(Turno turno);
-		// listar
-		public  List<Turno> leerTodos();
-		// existe
-		public  boolean existe(Long id);
-		
-		public long contarTurnosPresenteEntreFechas(Date startDate, Date endDate);
-		
-		public long contarTurnosAusenteEntreFechas(Date startDate, Date endDate);
-	
+	// actualizar
+	public boolean actualizar(Turno turno);
+
+	// borrar
+	public boolean borrar(Turno turno);
+
+	// listar
+	public List<Turno> leerTodos();
+
+	public long contarTurnosPresenteEntreFechas(Date startDate, Date endDate);
+
+	public long contarTurnosAusenteEntreFechas(Date startDate, Date endDate);
 
 }

@@ -39,9 +39,6 @@ public class DaoHorario implements IDaoHorario {
             e.printStackTrace();
             estado = false;
         } finally {
-            if (session != null) {
-                session.close();
-            }
         }
 
         return estado;
@@ -51,8 +48,6 @@ public class DaoHorario implements IDaoHorario {
         Session session = conexion.abrirConexion();
         session.beginTransaction();
         Horario horario = (Horario) session.get(Horario.class, idHorario);
-        session.getTransaction().commit();
-        session.close();
         return horario;
     }
 
@@ -61,8 +56,6 @@ public class DaoHorario implements IDaoHorario {
         session.beginTransaction();
         Horario horario = (Horario) session.get(Horario.class, idHorario);
         boolean exists = (horario != null);
-        session.getTransaction().commit();
-        session.close();
         return exists;
     }
 
@@ -89,9 +82,6 @@ public class DaoHorario implements IDaoHorario {
             e.printStackTrace();
             estado = false;
         } finally {
-            if (session != null) {
-                session.close();
-            }
         }
 
         return estado;
@@ -121,9 +111,6 @@ public class DaoHorario implements IDaoHorario {
             e.printStackTrace();
             estado = false;
         } finally {
-            if (session != null) {
-                session.close();
-            }
         }
 
         return estado;
@@ -134,8 +121,6 @@ public class DaoHorario implements IDaoHorario {
         Session session = conexion.abrirConexion();
         session.beginTransaction();
         List<Horario> horarios = session.createQuery("FROM Horario").list();
-        session.getTransaction().commit();
-        session.close();
         return horarios;
     }
 

@@ -2,168 +2,197 @@ package utnfrgp.entidad;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
 @NamedQueries({
-    @NamedQuery(
-        name = "findMedicoByMatricula",
-        query = "SELECT m FROM Medico m WHERE matricula=:matricula"
-    ),
-    @NamedQuery(
-        name = "findAllMedicos",
-        query = "SELECT m FROM Medico m"
-    ),
-    @NamedQuery(
-        name = "findAllMedicosOrderByMatricula",
-        query = "FROM Medico m ORDER BY m.matricula ASC"
-    ),
-    @NamedQuery(
-        name = "findAllMedicoLegajos",
-        query = "SELECT m.matricula FROM Medico m"
-    )
-})
+		@NamedQuery(name = "findMedicoByMatricula", query = "SELECT m FROM Medico m WHERE matricula=:matricula"),
+		@NamedQuery(name = "findAllMedicos", query = "SELECT m FROM Medico m"),
+		@NamedQuery(name = "findAllMedicosOrderByMatricula", query = "FROM Medico m ORDER BY m.matricula ASC"),
+		@NamedQuery(name = "findAllMedicoLegajos", query = "SELECT m.matricula FROM Medico m") })
 
 @Entity
-@Table(name="Medico")
+@Table(name = "Medico")
 public class Medico implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="matricula")
-    private int matricula;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "matricula")
+	private Long matricula;
 
-    @Column(name="nombre")
-    private String nombre;
+	@Column(name = "nombre")
+	private String nombre;
 
-    @Column(name="apellido")
-    private String apellido;
+	@Column(name = "apellido")
+	private String apellido;
 
-    @Column(name="email")
-    private String email;
+	@Column(name = "email")
+	private String email;
 
-    @Column(name="telefono")
-    private String telefono;
+	@Column(name = "telefono")
+	private String telefono;
 
-    @Column(name="fecha_nacimiento")
-    private LocalDate fechaNacimiento;
+	@Column(name = "fecha_nacimiento")
+	private LocalDate fechaNacimiento;
 
-    @OneToOne(cascade={CascadeType.ALL})
-    @JoinColumn(name="usuario_id")
-    private Usuario usuario;
+	@OneToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuario;
 
-    @ManyToOne(cascade= {CascadeType.ALL}, fetch=FetchType.EAGER)
-    @JoinColumn(name="especialidad_id")
-    private Especialidad especialidad;
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "especialidad_id")
+	private Especialidad especialidad;
 
-    @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Horario> horarios;
-    
-    @Column(name="estado")
-    private boolean estado;
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(name = "medico_x_horario", joinColumns = { @JoinColumn(name = "matricula_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "horario_id") })
+	private Set<Horario> horarios;
 
-    // Constructor vacío para Hibernate
-    public Medico() {}
+	@Column(name = "estado")
+	private boolean estado;
 
-    public Medico(int matricula , String nombre, String apellido, String email, String telefono,
-                  LocalDate fechaNacimiento, Usuario usuario, Especialidad especialidad, boolean estado) {
-        this.matricula = matricula;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.email = email;
-        this.telefono = telefono;
-        this.fechaNacimiento = fechaNacimiento;
-        this.usuario = usuario;
-        this.especialidad = especialidad;
-        this.estado = estado;
-    }
+	// Bidireccion
+	@OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
+	private List<Turno> turnos;
 
-    // Getters y setters
-    public int getMatricula() {
-        return matricula;
-    }
+	// Constructor vacío para Hibernate
+	public Medico() {
+	}
 
-    public void setMatricula(int matricula) {
-        this.matricula = matricula;
-    }
+	public Medico(String nombre, String apellido, String email, String telefono, LocalDate fechaNacimiento,
+			Usuario usuario, Especialidad especialidad, Set<Horario> horarios, boolean estado) {
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.email = email;
+		this.telefono = telefono;
+		this.fechaNacimiento = fechaNacimiento;
+		this.usuario = usuario;
+		this.especialidad = especialidad;
+		this.horarios = horarios;
+		this.estado = estado;
+	}
 
-    public String getNombre() {
-        return nombre;
-    }
+	public Medico(Long matricula, String nombre, String apellido, String email, String telefono,
+			LocalDate fechaNacimiento, Usuario usuario, Especialidad especialidad, Set<Horario> horarios,
+			boolean estado) {
+		this.matricula = matricula;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.email = email;
+		this.telefono = telefono;
+		this.fechaNacimiento = fechaNacimiento;
+		this.usuario = usuario;
+		this.especialidad = especialidad;
+		this.horarios = horarios;
+		this.estado = estado;
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	// Getters y setters
+	public Long getMatricula() {
+		return matricula;
+	}
 
-    public String getApellido() {
-        return apellido;
-    }
+	public void setMatricula(Long matricula) {
+		this.matricula = matricula;
+	}
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
+	public String getNombre() {
+		return nombre;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getApellido() {
+		return apellido;
+	}
 
-    public String getTelefono() {
-        return telefono;
-    }
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
+	public String getTelefono() {
+		return telefono;
+	}
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+	public LocalDate getFechaNacimiento() {
+		return fechaNacimiento;
+	}
 
-    public Especialidad getEspecialidad() {
-        return especialidad;
-    }
+	public void setFechaNacimiento(LocalDate fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
 
-    public void setEspecialidad(Especialidad especialidad) {
-        this.especialidad = especialidad;
-    }
+	public Usuario getUsuario() {
+		return usuario;
+	}
 
-    public Set<Horario> getHorarios() {
-        return horarios;
-    }
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 
-    public void setHorarios(Set<Horario> horarios) {
-        this.horarios = horarios;
-    }
+	public Especialidad getEspecialidad() {
+		return especialidad;
+	}
 
-    public boolean isEstado() {
-        return estado;
-    }
+	public void setEspecialidad(Especialidad especialidad) {
+		this.especialidad = especialidad;
+	}
 
-    public void setEstado(boolean estado) {
-        this.estado = estado;
-    }
+	public Set<Horario> getHorarios() {
+		return horarios;
+	}
 
-    @Override
-    public String toString() {
-        return "Medico [matricula=" + matricula + ", nombre=" + nombre + ", apellido=" + apellido + ", email=" + email
-                + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + ", usuario=" + usuario
-                + ", especialidad=" + especialidad + "]";
-    }
+	public void setHorarios(Set<Horario> horarios) {
+		this.horarios = horarios;
+	}
+
+	public boolean isEstado() {
+		return estado;
+	}
+
+	public void setEstado(boolean estado) {
+		this.estado = estado;
+	}
+
+	// Bidireccion
+	public List<Turno> getTurnos() {
+		return turnos;
+	}
+
+	public void setTurnos(List<Turno> turnos) {
+		this.turnos = turnos;
+	}
+
+	@Override
+	public String toString() {
+		String mensaje = "Medico [matricula=" + matricula + ", nombre=" + nombre + ", apellido=" + apellido + ", email="
+				+ email + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + ", usuario=" + usuario
+				+ ", especialidad=" + especialidad + ", horarios=" + horarios + ", estado=" + estado + ", turnos=";
+		String auxMensaje = "{";
+		if (turnos != null) {
+			for (Turno turno : turnos) {
+				auxMensaje += turno.getId() + " " + turno.getMedico() + " " + turno.getFecha() + " " + turno.getHora()
+						+ " " + turno.getObservacion() + " " + turno.getEstadoTurno() + " " + turno.getEstado() + " - ";
+			}
+		}
+		auxMensaje += "}";
+		return mensaje + auxMensaje + "]";
+	}
+
 }

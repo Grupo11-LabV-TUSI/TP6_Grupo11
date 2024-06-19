@@ -1,12 +1,13 @@
 package utnfrgp.entidad;
 
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,73 +18,64 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import utnfrgp.enums.EstadoTurno;
-
+import utnfrgp.enums.EEstadoTurno;
 
 /* Querys definidas por notacion */
-@NamedQueries({
-	@NamedQuery(
-		name = "findTurnoById",
-		query = "SELECT t FROM Turno t WHERE id=:id"
-		),
-	@NamedQuery(
-			name = "findAllTurnos",
-			query = "SELECT t FROM Turno t"
-		)
-})
+@NamedQueries({ @NamedQuery(name = "findTurnoById", query = "SELECT t FROM Turno t WHERE id=:id"),
+		@NamedQuery(name = "findAllTurnos", query = "SELECT t FROM Turno t") })
 
 @Entity
-@Table(name="Turno")
-public class Turno  implements Serializable{
+@Table(name = "Turno")
+public class Turno implements Serializable {
 	// Implemnetar serializable
 	private static final long serialVersionUID = 1L;
 	// atributos
 	@Id
-	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@ManyToOne(cascade= {CascadeType.ALL}, fetch=FetchType.EAGER)
-	@JoinColumn(name="medico_id")
+
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "medico_id")
 	private Medico medico;
-	
-	@ManyToOne(cascade= {CascadeType.ALL}, fetch=FetchType.EAGER)
-	@JoinColumn(name="paciente_id")
+
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "paciente_id")
 	private Paciente paciente;
-	
+
+	@Column(name = "fecha")
+	private LocalDate fecha;
+
+	@Column(name = "hora")
+	private LocalTime hora;
+
+	@Column(name = "observacion")
+	private String observacion;
+
+	@Column(name = "estadoTurno")
+	@Enumerated(EnumType.STRING)
+	private EEstadoTurno estadoTurno;
+
 	@Column(name = "Estado")
 	private boolean estado;
-	
-	@Column(name="fecha")
-	private LocalDate fecha;
-	
-	
-	
-	
-	@Column(name="hora")
-	private LocalTime hora;
-	
-	@Column(name="observacion")
-	private String observacion;
-	
-	@Column(name="estadoTurno")
-	private EstadoTurno estadoTurno;
-	
+
 	// constructor vacio para hibernate
-	public Turno() {}
+	public Turno() {
+	}
 
 	public Turno(Medico medico, Paciente paciente, LocalDate fecha, LocalTime hora, String observacion,
-			EstadoTurno estadoTurno) {
+			EEstadoTurno estadoTurno, boolean estado) {
 		this.medico = medico;
 		this.paciente = paciente;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.observacion = observacion;
 		this.estadoTurno = estadoTurno;
+		this.estado = estado;
 	}
 
 	public Turno(Long id, Medico medico, Paciente paciente, LocalDate fecha, LocalTime hora, String observacion,
-			EstadoTurno estadoTurno) {
+			EEstadoTurno estadoTurno, boolean estado) {
 		this.id = id;
 		this.medico = medico;
 		this.paciente = paciente;
@@ -91,7 +83,9 @@ public class Turno  implements Serializable{
 		this.hora = hora;
 		this.observacion = observacion;
 		this.estadoTurno = estadoTurno;
+		this.estado = estado;
 	}
+
 	// Getters y Setters
 	public Long getId() {
 		return id;
@@ -140,10 +134,8 @@ public class Turno  implements Serializable{
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
 	}
-	
-	
-	
-	public boolean isEstado() {
+
+	public boolean getEstado() {
 		return estado;
 	}
 
@@ -151,19 +143,18 @@ public class Turno  implements Serializable{
 		this.estado = estado;
 	}
 
-	public EstadoTurno getEstadoTurno() {
+	public EEstadoTurno getEstadoTurno() {
 		return estadoTurno;
 	}
 
-	public void setEstadoTurno(EstadoTurno estadoTurno) {
+	public void setEstadoTurno(EEstadoTurno estadoTurno) {
 		this.estadoTurno = estadoTurno;
 	}
 
-	// toString
 	@Override
 	public String toString() {
 		return "Turno [id=" + id + ", medico=" + medico + ", paciente=" + paciente + ", fecha=" + fecha + ", hora="
-				+ hora + ", observacion=" + observacion + ", estado del Turno=" + estadoTurno + ", estado " + estado +"]";
+				+ hora + ", observacion=" + observacion + ", estadoTurno=" + estadoTurno + ", estado=" + estado + "]";
 	}
 
 }

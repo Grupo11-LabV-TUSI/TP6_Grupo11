@@ -29,7 +29,7 @@ public class DaoEspecialidad implements IDaoEspecialidad {
 			session.flush();
 			session.getTransaction().commit();
 
-			Especialidad savedEspecialidad = (Especialidad) session.get(Especialidad.class, especialidad.getId());
+			Especialidad savedEspecialidad = (Especialidad) session.get(Especialidad.class, especialidad.getEspecialidad_id());
 			if (savedEspecialidad == null) {
 				estado = false;
 			}
@@ -45,31 +45,24 @@ public class DaoEspecialidad implements IDaoEspecialidad {
 	}
 
 	public Especialidad readOne(int idEspecialidad) {
-		conexion = new Conexion();
-		Session session = null;
-		Especialidad especialidad = null;
-		try {
-			session = conexion.abrirConexion();
-			especialidad = (Especialidad) session.get(Especialidad.class, idEspecialidad);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (session != null) {
-				session.close();
-			}
-		}
+		Session session = conexion.abrirConexion();
+		session.beginTransaction();
+		Especialidad especialidad = (Especialidad) session.get(Especialidad.class, idEspecialidad);
 		return especialidad;
 	}
 
 	public boolean exist(int idEspecialidad) {
-
-		return readOne(idEspecialidad) != null;
-
+		Session session = conexion.abrirConexion();
+		session.beginTransaction();
+		Especialidad especialidad = (Especialidad) session.get(Especialidad.class, idEspecialidad);
+		if (especialidad != null) {
+			return true;
+		}
+		return false;
 	}
 
 	public boolean update(Especialidad especialidad) {
 		boolean estado = true;
-		conexion = new Conexion();
 		Session session = null;
 		try {
 			session = conexion.abrirConexion();
@@ -84,9 +77,6 @@ public class DaoEspecialidad implements IDaoEspecialidad {
 			e.printStackTrace();
 			estado = false;
 		} finally {
-			if (session != null) {
-				session.close();
-			}
 		}
 		return estado;
 	}
@@ -106,18 +96,15 @@ public class DaoEspecialidad implements IDaoEspecialidad {
 				session.getTransaction().rollback();
 			}
 			e.printStackTrace();
-			estado = false;
 		} finally {
-			if (session != null) {
-				session.close();
-			}
 		}
 		return estado;
 	}
 
 	public List<Especialidad> readAll() {
 		conexion = new Conexion();
-		Session session = null;
+		Session session = conexion.abrirConexion();;
+		session.beginTransaction();
 		List<Especialidad> especialidades = session.createQuery("FROM Especialidad").list();
 		return especialidades;
 	}

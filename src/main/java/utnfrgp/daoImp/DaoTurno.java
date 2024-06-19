@@ -10,106 +10,128 @@ import utnfrgp.dao.IDaoTurno;
 import utnfrgp.entidad.Paciente;
 import utnfrgp.entidad.Turno;
 
-
-
 public class DaoTurno implements IDaoTurno {
-	
+
 	private Conexion conexion;
-	
-	public DaoTurno (Conexion conexion) {this.conexion = conexion;}
-	
-	public DaoTurno() {}
-	
-	
-	
-	public void add(Turno turno) {
-		
-		
+
+	public DaoTurno(Conexion conexion) {
+		this.conexion = conexion;
+	}
+
+	public DaoTurno() {
+	}
+
+	public boolean add(Turno turno) {
+		boolean estado = true;
 		conexion = new Conexion();
 		Session session = null;
-		
+
+		try {
 			session = conexion.abrirConexion();
 			session.beginTransaction();
-
 			// Guardar el objeto
 			session.save(turno);
-
 			// Forzar la sincronización de la sesión con la base de datos
 			session.flush();
-
 			// Confirmar la transacción
 			session.getTransaction().commit();
-		
+			// Verificar si el objeto se agregó a la base de datos
+			Turno savedTurno = (Turno) session.get(Turno.class, turno.getId());
+			if (savedTurno == null) {
+				estado = false;
+			}
+		} catch (Exception e) {
+			if (session != null) {
+				session.getTransaction().rollback();
+			}
+			e.printStackTrace();
+		} finally {
 
-	
+		}
+
+		return estado;
 	}
 
 	// leer
-	public  Turno leer(Long id) {
-		
+	public Turno leer(Long idTurno) {
 		Session session = conexion.abrirConexion();
-
 		session.beginTransaction();
-		Turno turno = (Turno) session.get(Turno.class, id);
-		
-		session.getTransaction().commit();
-		conexion.cerrarSession();
-
+		Turno turno = (Turno) session.get(Turno.class, idTurno);
 		return turno;
 	}
 
-	// actualizar
-	public  void actualizar(Turno turno)  {
-		
+	// existe
+	public boolean existe(Long idTurno) {
 		Session session = conexion.abrirConexion();
-
 		session.beginTransaction();
+		Turno turno = (Turno) session.get(Turno.class, idTurno);
+		if (turno != null) {
+			return true;
+		}
+		return false;
+	}
 
-		session.update(turno);
-		
+	// actualizar
+	public boolean actualizar(Turno turno) {
+		boolean estado = true;
+		Session session = null;
+		try {
+			session = conexion.abrirConexion();
+			session.beginTransaction();
+			session.update(turno);
+			session.flush();
+			session.getTransaction().commit();
+			Turno updateturno = (Turno) session.get(Turno.class, turno.getId());
+		} catch (Exception e) {
+			if (session != null) {
+				session.getTransaction().rollback();
+			}
+			e.printStackTrace();
+		} finally {
+		}
 
-		session.getTransaction().commit();
-		conexion.cerrarSession();
+		return estado;
 	}
 
 	// borrar
-	public  void borrar(Turno turno) { // Este turno tiene que venir cargado el id de turnio que se quiere
-												// eliminar
-		Session session = conexion.abrirConexion();
+	public boolean borrar(Turno turno) { // Este turno tiene que venir cargado el id de turno que se quiere eliminar
+		boolean estado = true;
+		conexion = new Conexion();
+		Session session = null;
 
-		session.beginTransaction();
-		session.delete(turno);
+		try {
+			session = conexion.abrirConexion();
+			session.beginTransaction();
+			session.delete(turno);
+			session.flush();
+			session.getTransaction().commit();
+			Turno deleteturno = (Turno) session.get(Turno.class, turno.getId());
+			if (deleteturno != null) {
+				estado = false;
+			}
+		} catch (Exception e) {
+			if (session != null) {
+				session.getTransaction().rollback();
+			}
+			e.printStackTrace();
+		} finally {
 
-		session.getTransaction().commit();
-		conexion.cerrarSession();
+		}
+
+		return estado;
 	}
 
 	// listar
-	public  List<Turno> leerTodos() {
-		
+	public List<Turno> leerTodos() {
+		conexion = new Conexion();
 		Session session = conexion.abrirConexion();
-
 		session.beginTransaction();
-
-		Query query = session.getNamedQuery("findAllTurnos");
-		List<Turno> lista = query.list();
-
+		List<Turno> lista = session.getNamedQuery("findAllTurnos").list();
 		return lista;
 	}
 
-	// existe
-	public  boolean existe(Long id) {
-		boolean existe = false;
+	public long contarTurnosPresenteEntreFechas(Date startDate, Date endDate) {
 
-		if (leer(id) != null) {
-			existe = true;
-		}
-
-		return existe;
-	}
-
-	public  long contarTurnosPresenteEntreFechas(Date startDate, Date endDate) {
-		
 		Session session = conexion.abrirConexion();
 		session.beginTransaction();
 
@@ -124,8 +146,8 @@ public class DaoTurno implements IDaoTurno {
 		return count;
 	}
 
-	public  long contarTurnosAusenteEntreFechas(Date startDate, Date endDate) {
-		
+	public long contarTurnosAusenteEntreFechas(Date startDate, Date endDate) {
+
 		Session session = conexion.abrirConexion();
 		session.beginTransaction();
 
@@ -141,8 +163,9 @@ public class DaoTurno implements IDaoTurno {
 	}
 
 	public void setConexion(Conexion conexion) {
-        this.conexion = conexion;
-    }
+		this.conexion = conexion;
+	}
+
 	public Conexion getConexion() {
 		return conexion;
 	}

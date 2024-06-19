@@ -4,9 +4,9 @@ import java.util.List;
 
 import utnfrgp.dao.IDaoEspecialidad;
 import utnfrgp.entidad.Especialidad;
-import utnfrgp.negocio.iEspecialidadNegocio;
+import utnfrgp.negocio.IEspecialidadNegocio;
 
-public class EspecialidadNegocio implements iEspecialidadNegocio {
+public class EspecialidadNegocio implements IEspecialidadNegocio {
 
 	private IDaoEspecialidad daoEspecialidad;
 

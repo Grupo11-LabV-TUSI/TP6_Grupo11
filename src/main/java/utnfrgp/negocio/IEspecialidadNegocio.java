@@ -4,7 +4,7 @@ import java.util.List;
 
 import utnfrgp.entidad.Especialidad;
 
-public interface iEspecialidadNegocio {
+public interface IEspecialidadNegocio {
 	public boolean add(Especialidad especialidad);
 	public Especialidad readOne(int idEspecialidad);
 	public boolean exist(int idEspecialidad);
